@@ -28,7 +28,7 @@ def create_tables():
 # Creation of the REST endpoints (resources) by binding them to the Resource classes
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
-api.add_resource(Queue, '/queue/<string:messagebody>')
+api.add_resource(Queue, '/queue/<string:path_parameter_in_uri>')
 
 # This is invoked because app.py is launched from the command line
 if __name__ == '__main__':

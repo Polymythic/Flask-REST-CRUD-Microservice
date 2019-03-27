@@ -16,36 +16,35 @@ class Queue(Resource):
                         help="This field cannot be left blank!"
                         )
 
+
     # Each method corresponds to an HTTP verb corresponding to the call
     # This is what flask_restful provides
-    def post(self, messagebody):
+    def post(self, path_parameter_in_uri):
 
-        #Create SQS client
-        sqs = boto3.client('sqs', region: 'us-east-1')
-        queue_url = 'https://sqs.us-east-1.amazonaws.com/846012508269/microservice_sample_queue'
+        #Create SQS client and login 
+        # DO NOT CHECK IN WITH CREDENTIALS
+        sqs = boto3.client('sqs', region_name='us-east-1',
+            aws_access_key_id='YOUR_KEY_HERE',
+            aws_secret_access_key='_YOUR_KEY_HERE'
+            )
+        queue_url = 'YOUR_QUEUE_HERE'
 
         # Send message to SQS queue
         response = sqs.send_message(
             QueueUrl=queue_url,
             DelaySeconds=10,
             MessageAttributes={
-                'Title': {
+                'Example': {
                     'DataType': 'String',
-                    'StringValue': 'The Whistler'
+                    'StringValue': 'This is some message attribute'
                 },
-                'Author': {
+                'Another_Example': {
                     'DataType': 'String',
-                    'StringValue': 'John Grisham'
-                },
-                'WeeksOn': {
-                    'DataType': 'Number',
-                    'StringValue': '6'
+                    'StringValue': 'This is another attribute'
                 }
             },
-            MessageBody=(
-                'Information about current NY Times fiction bestseller for '
-                'week of 12/11/2016.'
-            )
+            # Pass the path parameter that was sent in as the message body
+            MessageBody=(path_parameter_in_uri)
         )
         print(response['MessageId'])
         return response['MessageId'], 201
